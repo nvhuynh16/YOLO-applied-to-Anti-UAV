@@ -1,0 +1,43 @@
+# Inference Configuration for Anti-UAV Drone Detection API
+# This file centralizes all inference parameters following MLOps configuration management
+
+# Model configuration
+model:
+  # Path to model weights (relative to project root)
+  weights_path: "models/yolov8n_refined_v1.0.0/best.pt"
+
+  # Inference parameters
+  confidence_threshold: 0.25  # Minimum confidence for detection
+  iou_threshold: 0.45         # IoU threshold for NMS
+  max_detections: 100         # Maximum detections per image
+
+  # Model metadata
+  framework: "YOLOv8"
+  architecture: "YOLOv8n"
+  input_size: [640, 640]
+  classes: ["drone"]
+
+# Service configuration
+service:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 1
+  log_level: "INFO"
+
+  # API rate limiting (requests per minute)
+  rate_limit: 60
+
+  # Maximum upload file size (MB)
+  max_file_size_mb: 10
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  output_dir: "outputs/logs"
+
+# Performance monitoring
+monitoring:
+  enabled: true
+  log_inference_time: true
+  log_detections: true

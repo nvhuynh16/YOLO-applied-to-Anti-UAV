@@ -1,0 +1,10 @@
+# Anti-UAV Drone Detection Dataset
+# YOLO format
+
+path: C:/Users/darks/source/repos/Anti-UAV/data/processed  # dataset root dir
+train: images/train  # train images (relative to 'path')
+val: images/val  # val images (relative to 'path')
+
+# Classes
+nc: 1  # number of classes
+names: ['drone']  # class names

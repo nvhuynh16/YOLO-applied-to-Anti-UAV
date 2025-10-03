@@ -1,0 +1,22 @@
+# MLOps Dependencies for Anti-UAV Drone Detection
+# Install these additional packages for production deployment
+
+# Web Framework for API
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Configuration Management
+pyyaml==6.0.1
+
+# HTTP Client (for health checks)
+requests==2.31.0
+
+# Data Validation
+pydantic==2.5.0
+
+# Production Server (alternative to uvicorn)
+gunicorn==21.2.0
+
+# Monitoring and Logging
+python-json-logger==2.0.7

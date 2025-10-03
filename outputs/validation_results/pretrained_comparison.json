@@ -1,0 +1,21 @@
+{
+  "yolov8n_pretrained": {
+    "model": "YOLOv8n Pretrained (COCO)",
+    "mAP50": 0.1246425810216493,
+    "mAP50-95": 0.061287252169139626,
+    "precision": 0.19848053181386516,
+    "recall": 0.209
+  },
+  "yolov9c_pretrained": {
+    "model": "YOLOv9-C Pretrained (COCO)",
+    "error": "ERROR  C:\\Users\\darks\\source\\repos\\Anti-UAV\\models\\yolov9\\yolov9-c.pt appears to be an Ultralytics YOLOv5 model originally trained with https://github.com/ultralytics/yolov5.\nThis model is NOT forwards compatible with YOLOv8 at https://github.com/ultralytics/ultralytics.\nRecommend fixes are to train a new model using the latest 'ultralytics' package or to run a command with an official Ultralytics model, i.e. 'yolo predict model=yolo11n.pt'",
+    "note": "Not compatible with ultralytics validation API"
+  },
+  "yolov8n_refined": {
+    "model": "YOLOv8n Refined (Fine-tuned on Anti-UAV)",
+    "mAP50": 0.995,
+    "mAP50-95": 0.83201219783384,
+    "precision": 0.998921363225976,
+    "recall": 0.999
+  }
+}

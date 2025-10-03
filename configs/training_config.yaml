@@ -1,0 +1,63 @@
+# Training Configuration for Anti-UAV Drone Detection
+# This file centralizes training hyperparameters for reproducibility
+
+# Model configuration
+model:
+  architecture: "yolov8n.pt"
+  pretrained: true
+
+# Dataset configuration
+data:
+  dataset_yaml: "data/processed/dataset.yaml"
+  img_size: 640
+  cache: "disk"  # Options: false, "disk", "ram"
+
+# Training hyperparameters
+training:
+  epochs: 15
+  batch_size: 4
+  optimizer: "auto"
+  learning_rate: 0.01
+  momentum: 0.937
+  weight_decay: 0.0005
+
+  # Early stopping
+  patience: 5
+
+  # Augmentation
+  augment: true
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 0.0
+  translate: 0.1
+  scale: 0.5
+  shear: 0.0
+  perspective: 0.0
+  flipud: 0.0
+  fliplr: 0.5
+  mosaic: 1.0
+
+# Hardware configuration
+hardware:
+  device: 0  # GPU device ID (use "cpu" for CPU)
+  workers: 0  # Number of dataloader workers (0 for Windows)
+
+# Output configuration
+output:
+  project: "runs/train"
+  name: "yolov8n_light"
+  save_period: -1  # Save checkpoint every N epochs (-1 = only save last and best)
+  exist_ok: false
+  verbose: true
+
+# Validation configuration
+validation:
+  val: true
+  save_json: true
+  save_hybrid: false
+  conf: null
+  iou: 0.6
+  max_det: 300
+  half: false
+  plots: true

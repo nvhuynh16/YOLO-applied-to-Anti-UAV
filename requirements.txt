@@ -1,0 +1,45 @@
+# Anti-UAV YOLOv9 Drone Detection
+# Python 3.8+
+# Usage: pip install -r requirements.txt
+
+# Core Deep Learning --------------------------------------------------------
+torch>=1.7.0
+torchvision>=0.8.1
+
+# Computer Vision & Image Processing ----------------------------------------
+opencv-python>=4.1.1
+Pillow>=7.1.2
+albumentations>=1.0.3
+
+# Data & Numerical Processing -----------------------------------------------
+numpy>=1.18.5
+pandas>=1.1.4
+scipy>=1.4.1
+
+# Visualization -------------------------------------------------------------
+matplotlib>=3.2.2
+seaborn>=0.11.0
+
+# Progress & Utilities ------------------------------------------------------
+tqdm>=4.64.0
+PyYAML>=5.3.1
+requests>=2.23.0
+psutil
+gitpython
+
+# Model Evaluation ----------------------------------------------------------
+pycocotools>=2.0
+thop>=0.1.1  # For FLOPs calculation
+
+# Training Monitoring -------------------------------------------------------
+tensorboard>=2.4.1
+
+# Development & Notebooks ---------------------------------------------------
+jupyter>=1.0.0
+notebook>=6.0.0
+ipython
+ipywidgets
+
+# Optional: For ONNX export (uncomment if needed)
+# onnx>=1.9.0
+# onnx-simplifier>=0.4.1
