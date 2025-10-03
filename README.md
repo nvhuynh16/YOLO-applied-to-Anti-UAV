@@ -739,7 +739,7 @@ These contributions enabled achieving 83.20% mAP50-95 performance with minimal t
 
 ## License
 
-- **Source Code**: MIT License (educational and portfolio applications)
+- **Source Code**: MIT License (educational and demonstration applications)
 - **YOLOv8 Framework**: AGPL-3.0 License (Ultralytics)
 - **Anti-UAV Dataset**: Subject to original dataset licensing terms
 
@@ -747,7 +747,7 @@ These contributions enabled achieving 83.20% mAP50-95 performance with minimal t
 
 ## Technical Competencies Demonstrated
 
-This project demonstrates proficiency in:
+This project demonstrates:
 
 **Machine Learning Engineering**:
 - Transfer learning and domain adaptation
