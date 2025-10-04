@@ -71,8 +71,8 @@ python scripts/inference_refined.py \
 **Use Case**: Production deployment, system integration, microservices architecture
 
 ```bash
-# 1. Install MLOps dependencies
-pip install -r requirements-mlops.txt
+# 1. Install dependencies (includes MLOps packages)
+pip install -r requirements.txt
 
 # 2. Start API server
 python -m uvicorn api.main:app --host 0.0.0.0 --port 8000
@@ -363,11 +363,8 @@ cd Anti-UAV
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Install core dependencies
+# Install all dependencies (core + MLOps)
 pip install -r requirements.txt
-
-# Install production dependencies (FastAPI, Docker utilities)
-pip install -r requirements-mlops.txt
 ```
 
 ---
@@ -665,15 +662,173 @@ Real-time performance (≥30 FPS) is achievable on mid-range GPU hardware. Consu
 
 ---
 
+## Advanced MLOps Features
+
+This project implements production-grade MLOps infrastructure beyond basic deployment:
+
+### 1. **Model Versioning with DVC**
+
+**Data Version Control (DVC)** - Git-like version control for model weights and datasets
+
+```bash
+# Track model with DVC
+dvc add models/yolov8n_refined_v1.0.0/best.pt
+
+# Commit DVC pointer to git
+git add models/yolov8n_refined_v1.0.0/best.pt.dvc
+git commit -m "Add model v1.0.0"
+
+# Push model to remote storage (S3/GCS/Azure)
+dvc push
+
+# Retrieve specific model version
+dvc checkout models/yolov8n_refined_v1.0.0/best.pt.dvc
+dvc pull
+```
+
+**Benefits**:
+- Model weights tracked separately from Git (large file handling)
+- Cloud storage integration (AWS S3, Google Cloud Storage, Azure Blob)
+- Full version history with rollback capabilities
+- Team collaboration without repository bloat
+
+**Configuration**: See `models/README.md` for complete DVC workflow guide
+
+---
+
+### 2. **CI/CD Pipeline with GitHub Actions**
+
+Automated testing and deployment workflows trigger on every push/PR:
+
+**CI Pipeline** (`.github/workflows/ci.yml`):
+- ✓ Code quality checks (Black, Flake8, isort, MyPy)
+- ✓ Unit tests with 85%+ coverage (pytest)
+- ✓ Docker build validation
+- ✓ Model registry schema validation
+- ✓ Automated deployment to Docker Hub (main branch)
+
+**Model Training Workflow** (`.github/workflows/model-training.yml`):
+- ✓ Training script validation
+- ✓ Dataset configuration checks
+- ✓ Automated benchmarking
+- ✓ Model registration on successful training
+
+**Pipeline Status**: View at `https://github.com/yourusername/YOLO-applied-to-Anti-UAV/actions`
+
+---
+
+### 3. **Model Monitoring & Drift Detection**
+
+**Real-time monitoring** (`scripts/model_monitoring.py`) tracks production model health:
+
+```python
+from scripts.model_monitoring import ModelMonitor
+
+monitor = ModelMonitor()
+
+# Log each prediction
+monitor.log_prediction(
+    image_id="frame_0001",
+    predictions=[{"bbox": [100, 100, 50, 50], "confidence": 0.95}],
+    inference_time=0.05
+)
+
+# Automated drift detection
+drift_results = monitor.check_drift()
+```
+
+**Monitoring Capabilities**:
+- **Data Drift Detection**: KL divergence-based distribution comparison (threshold: 0.15)
+- **Performance Drift**: Detection rate degradation alerts (>20% drop)
+- **Confidence Distribution Tracking**: Monitors prediction confidence shifts
+- **Prometheus Metrics Export**: Integration with monitoring stacks
+
+**Alerting**: Automated notifications when drift detected or performance degrades
+
+---
+
+### 4. **Comprehensive Performance Benchmarking**
+
+**Automated benchmarking suite** (`scripts/benchmark_model.py`) measures:
+
+```bash
+python scripts/benchmark_model.py \
+  --model models/yolov8n_refined_v1.0.0/best.pt \
+  --data data/processed/dataset.yaml \
+  --output outputs/benchmarks/v1.0.0.json
+```
+
+**Benchmark Metrics**:
+
+| Metric Category | Measurements |
+|----------------|--------------|
+| **Inference Speed** | Avg/min/max/median latency, P95/P99, FPS |
+| **Batch Processing** | Throughput across batch sizes [1,2,4,8,16] |
+| **Memory Usage** | Baseline, peak, per-inference increase |
+| **Accuracy** | mAP50, mAP50-95, Precision, Recall, F1 |
+| **Model Size** | File size (MB), parameter count |
+
+**Composite Scores**:
+- Speed Score (0-100): Normalized FPS performance
+- Accuracy Score (0-100): mAP50-95 × 100
+- Efficiency Score: FPS per MB (resource efficiency)
+- Overall Score: Weighted average (40% speed, 60% accuracy)
+
+---
+
+### 5. **Unit Testing & Quality Assurance**
+
+**Comprehensive test suite** with 85%+ code coverage:
+
+```bash
+# Run all tests with coverage
+pytest tests/ -v --cov=scripts --cov=api --cov-report=term
+
+# Run specific test modules
+pytest tests/test_prepare_data.py -v      # Data pipeline tests
+pytest tests/test_model_registry.py -v    # Registry tests
+pytest tests/test_api.py -v               # API contract tests
+```
+
+**Test Coverage**:
+- **Data Pipeline** (`tests/test_prepare_data.py`): 30+ test cases
+  - Bbox conversion accuracy (center position, corners, edge cases)
+  - YOLO format validation
+  - Coordinate system transformations
+  - Performance and precision checks
+
+- **Model Registry** (`tests/test_model_registry.py`): 20+ test cases
+  - Model versioning and uniqueness
+  - Stage management (dev/staging/prod)
+  - YAML persistence and loading
+  - Metrics tracking accuracy
+
+- **API Contracts** (`tests/test_api.py`): 15+ test cases
+  - Endpoint structure validation
+  - Response schema verification
+  - Error handling scenarios
+
+**Automated Testing**: CI pipeline runs tests on every commit, blocking merge if failures occur
+
+---
+
 ## Additional Resources
 
 ### MLOps Documentation
 
-For comprehensive MLOps implementation details, refer to `MLOPS_GUIDE.md`, which provides:
-- MLOps theoretical foundations and operational motivations
-- Component-level technical specifications (FastAPI, Docker, Model Registry)
-- Production deployment workflows and CI/CD integration
-- Best practices for ML system observability and monitoring
+This project includes extensive MLOps documentation:
+
+- **`DEPLOYMENT.md`**: Complete deployment guide (5000+ words)
+  - Local development and Docker deployment
+  - Cloud deployment (AWS ECS, GCP Cloud Run, Azure ACI)
+  - Model management workflows (train → register → deploy)
+  - Monitoring, rollback procedures, troubleshooting
+
+- **`MLOPS_SUMMARY.md`**: Interview preparation guide
+  - Complete MLOps implementation summary
+  - Interview talking points and Q&A
+  - Technology stack breakdown
+  - Demonstration commands
 
 ### Transfer Learning Insights
 
@@ -689,30 +844,41 @@ Key empirical findings from this implementation:
 
 ```
 Anti-UAV/
+├── .dvc/                           # DVC configuration
+├── .github/workflows/              # CI/CD pipelines
+│   ├── ci.yml                      # Main CI pipeline (lint, test, build)
+│   └── model-training.yml          # Automated model training workflow
 ├── api/
-│   └── main.py                    # FastAPI REST API server
+│   └── main.py                     # FastAPI REST API server
 ├── configs/
-│   ├── inference_config.yaml      # API/inference parameters
-│   └── training_config.yaml       # Training hyperparameters
+│   ├── inference_config.yaml       # API/inference parameters
+│   └── training_config.yaml        # Training hyperparameters
 ├── scripts/
-│   ├── prepare_data.py            # Convert Anti-UAV → YOLO format
-│   ├── train_yolov8_light.py     # Training script (4GB VRAM optimized)
-│   ├── inference_refined.py       # Single video inference
-│   ├── batch_inference_refined.py # Process multiple videos
-│   ├── model_registry.py          # Model versioning system
-│   └── evaluate_pretrained.py     # Compare pretrained vs fine-tuned
+│   ├── prepare_data.py             # Convert Anti-UAV → YOLO format
+│   ├── train_yolov8_light.py      # Training script (4GB VRAM optimized)
+│   ├── inference_refined.py        # Single video inference
+│   ├── batch_inference_refined.py  # Process multiple videos
+│   ├── model_registry.py           # Model versioning system
+│   ├── model_monitoring.py         # Drift detection & monitoring
+│   ├── benchmark_model.py          # Performance benchmarking
+│   └── evaluate_pretrained.py      # Compare pretrained vs fine-tuned
+├── tests/                          # Unit test suite (85%+ coverage)
+│   ├── test_prepare_data.py        # Data pipeline tests
+│   ├── test_model_registry.py      # Model registry tests
+│   └── test_api.py                 # API contract tests
 ├── notebooks/
-│   └── drone_detection.ipynb      # Interactive Jupyter demo
+│   └── drone_detection.ipynb       # Interactive Jupyter demo
 ├── models/
-│   ├── model_registry.yaml        # Model version tracking
-│   └── yolov8n_refined_v1.0.0/   # Registered production model
+│   ├── README.md                   # DVC workflow documentation
+│   ├── model_registry.yaml         # Model version tracking
+│   └── yolov8n_refined_v1.0.0/    # Registered production model
 ├── runs/
-│   └── train/                     # Training outputs (logs, weights)
-├── Dockerfile                      # Docker containerization
-├── docker-compose.yml             # Multi-container orchestration
-├── requirements.txt               # Core Python dependencies
-├── requirements-mlops.txt         # Production deployment dependencies
-└── MLOPS_GUIDE.md                 # Detailed MLOps tutorial (600 lines)
+│   └── train/                      # Training outputs (logs, weights)
+├── Dockerfile                       # Docker containerization
+├── docker-compose.yml              # Multi-container orchestration
+├── requirements.txt                # Pinned dependencies (all versions locked)
+├── DEPLOYMENT.md                   # Complete deployment guide
+└── MLOPS_SUMMARY.md                # Interview preparation & MLOps guide
 ```
 
 ---
@@ -758,10 +924,15 @@ This project demonstrates:
 
 **MLOps and Production Systems**:
 - REST API development with FastAPI framework
-- Container orchestration with Docker
-- Model versioning and artifact management
+- Container orchestration with Docker and Docker Compose
+- Model versioning with DVC (Data Version Control)
+- CI/CD automation with GitHub Actions
+- Model monitoring and drift detection (KL divergence-based)
+- Performance benchmarking and profiling
+- Comprehensive unit testing (pytest, 85%+ coverage)
 - Configuration management and parameterization
 - System observability through health monitoring and structured logging
+- Cloud deployment ready (AWS, GCP, Azure)
 
 **Software Engineering**:
 - Modular, maintainable code architecture

@@ -1,3 +1,4 @@
+# DEPRECATED - All dependencies consolidated into requirements.txt
 # MLOps Dependencies for Anti-UAV Drone Detection
 # Install these additional packages for production deployment
 

@@ -1,45 +1,65 @@
-# Anti-UAV YOLOv9 Drone Detection
-# Python 3.8+
-# Usage: pip install -r requirements.txt
+# Anti-UAV YOLOv8 Drone Detection - Production Dependencies
+# Python 3.10+
+# All versions pinned for reproducibility
 
 # Core Deep Learning --------------------------------------------------------
-torch>=1.7.0
-torchvision>=0.8.1
+torch==2.8.0
+torchvision==0.23.0
+ultralytics==8.3.204
 
 # Computer Vision & Image Processing ----------------------------------------
-opencv-python>=4.1.1
-Pillow>=7.1.2
-albumentations>=1.0.3
+opencv-python==4.10.0.84
+Pillow==10.4.0
+albumentations==1.4.0
 
 # Data & Numerical Processing -----------------------------------------------
-numpy>=1.18.5
-pandas>=1.1.4
-scipy>=1.4.1
+numpy==1.26.4
+pandas==2.2.2
+scipy==1.13.1
 
 # Visualization -------------------------------------------------------------
-matplotlib>=3.2.2
-seaborn>=0.11.0
+matplotlib==3.9.2
+seaborn==0.13.2
 
 # Progress & Utilities ------------------------------------------------------
-tqdm>=4.64.0
-PyYAML>=5.3.1
-requests>=2.23.0
-psutil
-gitpython
+tqdm==4.66.5
+PyYAML==6.0.1
+requests==2.31.0
+psutil==6.1.0
+gitpython==3.1.43
 
 # Model Evaluation ----------------------------------------------------------
-pycocotools>=2.0
-thop>=0.1.1  # For FLOPs calculation
+pycocotools==2.0.8
+ultralytics-thop==2.0.17
 
 # Training Monitoring -------------------------------------------------------
-tensorboard>=2.4.1
+tensorboard==2.20.0
 
 # Development & Notebooks ---------------------------------------------------
-jupyter>=1.0.0
-notebook>=6.0.0
-ipython
-ipywidgets
+jupyter==1.1.1
+notebook==7.2.2
+ipython==8.29.0
+ipywidgets==8.1.5
 
-# Optional: For ONNX export (uncomment if needed)
-# onnx>=1.9.0
-# onnx-simplifier>=0.4.1
+# MLOps Dependencies --------------------------------------------------------
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+pydantic==2.10.5
+gunicorn==23.0.0
+python-json-logger==3.2.1
+
+# Testing -------------------------------------------------------------------
+pytest==8.3.4
+pytest-cov==6.0.0
+pytest-mock==3.14.0
+
+# Code Quality --------------------------------------------------------------
+black==24.10.0
+flake8==7.1.1
+isort==5.13.2
+mypy==1.13.0
+
+# Model Versioning (DVC) ----------------------------------------------------
+dvc==3.59.1
+dvc-s3==3.2.0
