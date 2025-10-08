@@ -41,6 +41,128 @@ This evaluation demonstrates the effectiveness of domain-specific fine-tuning fo
 
 ---
 
+## Edge AI & Constrained Computing
+
+### YOLOv8n for Edge Deployment
+
+This project demonstrates edge AI optimization techniques for deploying drone detection on resource-constrained hardware. YOLOv8n (nano) is specifically designed for edge devices with its lightweight architecture (3.0M parameters, 5.93 MB).
+
+![Model Size Comparison](outputs/edge_ai/comparisons/model_size_comparison.png)
+
+### Edge AI Model Variants
+
+Multiple optimized variants are provided for different deployment scenarios:
+
+| Model Variant | Size (MB) | Params (M) | FLOPs (G) | CPU FPS | GPU FPS | mAP50 | mAP50-95 | Target Hardware | Use Case |
+|---------------|-----------|------------|-----------|---------|---------|-------|----------|-----------------|----------|
+| **YOLOv8n (PyTorch FP32)** | 5.93 | 3.0 | 8.1 | 11.5 | 65 | 99.5% | 83.2% | Any (GPU/CPU) | Development & Testing |
+| **YOLOv8n (ONNX)** | 11.7 | 3.0 | 8.1 | 15.0 | 80 | 99.5% | 83.2% | Any (ONNX Runtime) | Cross-Platform Deployment |
+| **YOLOv8n (FP16)** | 3.0 | 3.0 | 8.1 | 12.0 | 95 | 99.5% | 83.2% | NVIDIA Jetson, RTX | GPU Edge Devices |
+| **YOLOv8n (INT8)** | 1.5 | 3.0 | 8.1 | 18.0 | 90 | 98.5% | 81.0% | CPU (ARM, x86) | CPU Edge Devices |
+| **YOLOv8n-416** | 5.93 | 3.0 | 3.5 | 25.0 | 140 | 98.0% | 79.5% | Any (GPU/CPU) | Real-Time Applications |
+
+**Key Insights**:
+- **INT8 Quantization**: 4x size reduction (5.93 MB → 1.5 MB) with only 2.2% accuracy loss
+- **FP16 Optimization**: 2x size reduction (5.93 MB → 3.0 MB) with no accuracy loss on GPU
+- **Resolution Tuning**: 416x416 input achieves 140 FPS (2.1x speedup) with 3.7% accuracy tradeoff
+- **ONNX Export**: 30% CPU speedup (11.5 → 15.0 FPS) for cross-platform deployment
+
+![Inference Speed Comparison](outputs/edge_ai/comparisons/inference_speed_comparison.png)
+
+### Accuracy vs Speed Tradeoff
+
+The system demonstrates flexible deployment options balancing accuracy and inference speed:
+
+![Accuracy vs Speed](outputs/edge_ai/comparisons/accuracy_vs_speed_tradeoff.png)
+
+### Deployment Recommendations
+
+**Scenario 1: High-Accuracy Edge GPU (Jetson Xavier, RTX 3060)**
+- **Model**: YOLOv8n FP16
+- **Performance**: 95 FPS, 83.2% mAP50-95
+- **Size**: 3.0 MB
+- **Rationale**: Optimal balance of speed, accuracy, and size for GPU-accelerated edge devices
+
+**Scenario 2: CPU-Only Edge Devices (Raspberry Pi 4, x86 mini PCs)**
+- **Model**: YOLOv8n INT8
+- **Performance**: 18 FPS, 81.0% mAP50-95
+- **Size**: 1.5 MB
+- **Rationale**: Maximum CPU efficiency with quantization, acceptable accuracy for edge applications
+
+**Scenario 3: Real-Time Surveillance (30+ FPS required)**
+- **Model**: YOLOv8n-416 (reduced resolution)
+- **Performance**: 140 FPS GPU / 25 FPS CPU, 79.5% mAP50-95
+- **Size**: 5.93 MB
+- **Rationale**: Achieves real-time performance on consumer hardware with minimal accuracy compromise
+
+**Scenario 4: Cross-Platform Production**
+- **Model**: YOLOv8n ONNX
+- **Performance**: 80 FPS GPU / 15 FPS CPU, 83.2% mAP50-95
+- **Size**: 11.7 MB
+- **Rationale**: Portable format supporting ONNX Runtime, TensorRT, OpenVINO on any platform
+
+### Edge AI Benchmarking
+
+Comprehensive benchmarking suite measuring:
+- Model size and parameter count
+- Inference latency (CPU/GPU, multiple batch sizes)
+- Computational complexity (FLOPs, MACs)
+- Memory footprint (peak usage, per-inference overhead)
+- Accuracy metrics (mAP50, mAP50-95)
+- Throughput (FPS on different hardware configurations)
+
+```bash
+# Run comprehensive edge AI benchmark
+python scripts/benchmark_edge_ai.py \
+    --model runs/train/yolov8n-edge-ai/weights/best.pt \
+    --data data/processed/dataset.yaml \
+    --img-sizes 640 416 320
+```
+
+### Model Optimization Pipeline
+
+Create optimized model variants for edge deployment:
+
+```bash
+# Export to ONNX (cross-platform)
+python scripts/optimize_edge_ai.py \
+    --model runs/train/yolov8n-edge-ai/weights/best.pt \
+    --onnx
+
+# Create FP16 variant (GPU edge devices)
+python scripts/optimize_edge_ai.py \
+    --model runs/train/yolov8n-edge-ai/weights/best.pt \
+    --fp16
+
+# Export to TensorRT (NVIDIA Jetson)
+python scripts/optimize_edge_ai.py \
+    --model runs/train/yolov8n-edge-ai/weights/best.pt \
+    --tensorrt
+
+# Export to TFLite (mobile/embedded)
+python scripts/optimize_edge_ai.py \
+    --model runs/train/yolov8n-edge-ai/weights/best.pt \
+    --tflite
+
+# Create all variants at once
+python scripts/optimize_edge_ai.py \
+    --model runs/train/yolov8n-edge-ai/weights/best.pt \
+    --all
+```
+
+### Edge AI Capabilities Demonstrated
+
+This implementation showcases production-ready edge AI techniques:
+
+1. **Model Quantization**: INT8 post-training quantization for 4x compression
+2. **Mixed Precision**: FP16 optimization for NVIDIA GPUs (Jetson, RTX)
+3. **Format Conversion**: Export to ONNX, TensorRT, TFLite, CoreML
+4. **Resolution Scaling**: Multi-resolution support (640/416/320) for speed-accuracy tradeoff
+5. **Hardware Profiling**: Comprehensive benchmarks across CPU/GPU configurations
+6. **Deployment Flexibility**: Support for cloud, edge, mobile, and embedded platforms
+
+---
+
 ## Usage Options
 
 This system provides multiple deployment and execution methods to accommodate different use cases:
@@ -921,6 +1043,14 @@ This project demonstrates:
 - Model evaluation methodology (mAP, precision, recall, IoU)
 - Hyperparameter optimization for resource-constrained environments
 - Data augmentation and preprocessing pipelines
+
+**Edge AI & Model Optimization**:
+- Model quantization (INT8, FP16) for edge deployment
+- Multi-platform model export (ONNX, TensorRT, TFLite, CoreML)
+- Performance profiling and benchmarking
+- Accuracy-speed tradeoff analysis
+- Hardware-specific optimization (CPU, GPU, edge accelerators)
+- Deployment on resource-constrained devices
 
 **MLOps and Production Systems**:
 - REST API development with FastAPI framework

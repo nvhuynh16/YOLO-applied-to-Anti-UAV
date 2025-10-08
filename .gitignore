@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code
+.claude/
+
+# Model weights and large files (use DVC or Git LFS for versioning)
+*.pt
+*.pth
+*.onnx
+*.engine
+*.tflite
+*.mlpackage
+models/*/best.pt
+models/*/last.pt
+runs/
+
+# Training outputs
+outputs/videos/
+outputs/predictions/
+outputs/edge_ai/models/
+outputs/edge_ai/benchmarks/
+
+# Data (use DVC for data versioning)
+data/raw/
+data/subset/
+data/processed/images/
+data/processed/labels/
+
+# OS
+.DS_Store
+Thumbs.db
+nul
+
+# Environment variables
+.env
+.env.local

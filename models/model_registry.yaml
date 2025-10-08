@@ -12,3 +12,17 @@ yolov8n_refined_v1.0.0:
     mAP50-95: 0.82332
     precision: 0.99791
     recall: 0.998
+yolov8n_edge_ai_v1.0.0:
+  name: yolov8n_edge_ai
+  version: 1.0.0
+  model_id: yolov8n_edge_ai_v1.0.0
+  model_path: models\yolov8n_edge_ai_v1.0.0\best.pt
+  stage: production
+  framework: YOLOv8
+  created_at: '2025-10-07T22:12:12.608329'
+  description: yolov8n_edge_ai version 1.0.0
+  metrics:
+    mAP50: 0.99447
+    mAP50-95: 0.82332
+    precision: 0.99791
+    recall: 0.998
